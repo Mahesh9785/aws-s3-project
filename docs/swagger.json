@@ -1,0 +1,509 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/buckets": {
+      "post": {
+        "summary": "Create a new bucket",
+        "description": "Create a new bucket",
+        "tags": ["BucketController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bucket created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bucket"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all buckets",
+        "description": "Get all buckets",
+        "tags": ["BucketController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Buckets retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Bucket"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/buckets/{bucketId}": {
+      "get": {
+        "summary": "Get a bucket by ID",
+        "description": "Get a bucket by ID",
+        "tags": ["BucketController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bucketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bucket retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bucket"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bucket not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a bucket",
+        "description": "Delete a bucket",
+        "tags": ["BucketController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bucketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Bucket deleted successfully"
+          },
+          "404": {
+            "description": "Bucket not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/bucket/{bucketId}/files": {
+      "post": {
+        "summary": "Upload a file to a bucket",
+        "description": "Upload a file to a bucket",
+        "tags": ["FileController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bucketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bucket not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all files in a bucket",
+        "description": "Get all files in a bucket",
+        "tags": ["FileController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bucketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/File"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bucket not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/bucket/{bucketId}/files/{fileId}": {
+      "get": {
+        "summary": "Get a file by ID",
+        "description": "Get a file by ID",
+        "tags": ["FileController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bucketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a file",
+        "description": "Delete a file",
+        "tags": ["FileController"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "bucketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted successfully"
+          },
+          "404": {
+            "description": "File not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "summary": "Login",
+        "description": "Login",
+        "tags": ["UserController"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/user/register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Register a new user",
+        "tags": ["UserController"],
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user data or user already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Bucket": {
+        "type": "object",
+        "properties": {
+          "bucketId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          }
+        }
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "originalname": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "JWT token"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "BucketController",
+      "description": "Bucket management endpoints"
+    },
+    {
+      "name": "FileController",
+      "description": "File management endpoints"
+    },
+    {
+      "name": "UserController",
+      "description": "User management endpoints"
+    }
+  ]
+}
